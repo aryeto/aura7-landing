@@ -15,14 +15,27 @@
   body.fonts-ready { opacity: 1; }
 </style>
 <script>
+  /* Блокируем любой скролл до полной загрузки */
+  document.documentElement.style.scrollBehavior = 'auto';
   window.addEventListener('load', function() {
+    /* Сбрасываем позицию немедленно */
+    window.scrollTo(0, 0);
+    document.body.style.overflow = 'hidden';
+
+    var show = function() {
+      window.scrollTo(0, 0);
+      document.body.style.overflow = '';
+      document.body.classList.add('fonts-ready');
+      document.documentElement.style.scrollBehavior = '';
+    };
+
     if (document.fonts && document.fonts.ready) {
       document.fonts.ready.then(function() {
-        document.body.classList.add('fonts-ready');
         window.scrollTo(0, 0);
+        setTimeout(show, 50);
       });
     } else {
-      document.body.classList.add('fonts-ready');
+      setTimeout(show, 50);
     }
   });
 </script>
