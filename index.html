@@ -1107,7 +1107,7 @@ p.light { color: rgba(255,255,255,0.72); }
     }
   }
 
-  window.selectCountry = function(code) {
+  window.selectCountry = function(code, noFocus) {
     var c = findByCode(code);
     current = c;
     document.getElementById("flag-display").textContent = c.flag;
@@ -1118,7 +1118,7 @@ p.light { color: rgba(255,255,255,0.72); }
     document.getElementById("country-list").style.display = "none";
     var search = document.getElementById("country-search");
     if (search) { search.value = ""; renderList(""); }
-    inp.focus();
+    if (!noFocus) inp.focus();
   };
 
   window.filterCountries = function(val) { renderList(val); };
@@ -1154,8 +1154,8 @@ p.light { color: rgba(255,255,255,0.72); }
   /* Auto-detect by IP */
   fetch("https://ipapi.co/json/")
     .then(function(r){ return r.json(); })
-    .then(function(d){ selectCountry(d.country_code || "RU"); })
-    .catch(function(){ selectCountry("RU"); });
+    .then(function(d){ selectCountry(d.country_code || "RU", true); })
+    .catch(function(){ selectCountry("RU", true); });
 
   renderList("");
 
