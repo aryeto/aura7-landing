@@ -956,8 +956,26 @@ p.light { color: rgba(255,255,255,0.72); }
   <div class="form-card" id="form-card">
     <div class="form-group">
       <label class="form-label">Номер телефона</label>
-      <input class="form-input" type="tel" id="phone-input" placeholder="+7 (999) 000-00-00">
-      <div class="phone-hint">
+      <div style="display:flex;gap:8px;align-items:stretch;">
+        <!-- Country selector -->
+        <div id="country-selector" style="position:relative;flex-shrink:0;">
+          <button id="country-btn" onclick="toggleCountryList(event)" style="display:flex;align-items:center;gap:6px;padding:0 12px;height:100%;min-height:46px;background:var(--cream);border:1.5px solid #E0D5D8;border-radius:10px;cursor:pointer;font-size:15px;font-family:inherit;white-space:nowrap;">
+            <span id="flag-display">🇷🇺</span>
+            <span id="code-display" style="color:var(--text-mid);font-weight:500;">+7</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" style="opacity:0.4"><path d="M6 9l6 6 6-6" stroke="#1A0E12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <!-- Dropdown -->
+          <div id="country-list" style="display:none;position:absolute;top:calc(100% + 6px);left:0;background:#fff;border:1.5px solid #E0D5D8;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.12);z-index:100;min-width:220px;overflow:hidden;">
+            <div style="padding:8px;border-bottom:1px solid #F0E8E8;">
+              <input id="country-search" type="text" placeholder="Поиск страны..." oninput="filterCountries(this.value)" style="width:100%;padding:8px 10px;border:1px solid #E0D5D8;border-radius:7px;font-size:13px;font-family:inherit;outline:none;background:var(--cream);">
+            </div>
+            <div id="country-options" style="max-height:200px;overflow-y:auto;"></div>
+          </div>
+        </div>
+        <!-- Phone input -->
+        <input class="form-input" type="tel" id="phone-input" placeholder="000 000-00-00" style="flex:1;min-width:0;" oninput="formatPhone(this)">
+      </div>
+      <div class="phone-hint" style="margin-top:8px;">
         <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="vertical-align:middle"><rect x="5" y="11" width="14" height="10" rx="2" fill="#C9A96E" fill-opacity="0.3" stroke="#C9A96E" stroke-width="2"/><path d="M8 11V7a4 4 0 018 0v4" stroke="#C9A96E" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="16" r="1.5" fill="#C9A96E"/></svg></span>
         <span class="phone-hint-text">Ваш номер <strong>не виден экспертам</strong>. Нужен только для входа. Номер скрыт от эксперта во время звонка.</span>
       </div>
@@ -1007,109 +1025,210 @@ p.light { color: rgba(255,255,255,0.72); }
 
 <script>
 (function() {
-  /* 1. HERO WORDS — плавный stagger по словам */
-  var h1 = document.querySelector('.hero h1');
+
+  /* ── COUNTRIES DATA ── */
+  var C = [
+    {code:"RU",flag:"🇷🇺",name:"Россия",      dial:"+7",  mask:"### ###-##-##",  digits:10},
+    {code:"BY",flag:"🇧🇾",name:"Беларусь",    dial:"+375",mask:"## ###-##-##",   digits:9 },
+    {code:"UA",flag:"🇺🇦",name:"Украина",     dial:"+380",mask:"## ###-##-##",   digits:9 },
+    {code:"KZ",flag:"🇰🇿",name:"Казахстан",   dial:"+7",  mask:"### ###-##-##",  digits:10},
+    {code:"UZ",flag:"🇺🇿",name:"Узбекистан",  dial:"+998",mask:"## ###-##-##",   digits:9 },
+    {code:"AZ",flag:"🇦🇿",name:"Азербайджан", dial:"+994",mask:"## ###-##-##",   digits:9 },
+    {code:"AM",flag:"🇦🇲",name:"Армения",     dial:"+374",mask:"## ##-##-##",    digits:8 },
+    {code:"GE",flag:"🇬🇪",name:"Грузия",      dial:"+995",mask:"### ##-##-##",   digits:9 },
+    {code:"MD",flag:"🇲🇩",name:"Молдова",     dial:"+373",mask:"## ###-###",     digits:8 },
+    {code:"KG",flag:"🇰🇬",name:"Кыргызстан",  dial:"+996",mask:"### ##-##-##",   digits:9 },
+    {code:"TJ",flag:"🇹🇯",name:"Таджикистан", dial:"+992",mask:"## ###-##-##",   digits:9 },
+    {code:"TM",flag:"🇹🇲",name:"Туркменистан",dial:"+993",mask:"## ##-##-##",    digits:8 },
+    {code:"LT",flag:"🇱🇹",name:"Литва",       dial:"+370",mask:"### ##-###",     digits:8 },
+    {code:"LV",flag:"🇱🇻",name:"Латвия",      dial:"+371",mask:"#### ####",      digits:8 },
+    {code:"EE",flag:"🇪🇪",name:"Эстония",     dial:"+372",mask:"#### ####",      digits:8 },
+    {code:"DE",flag:"🇩🇪",name:"Германия",    dial:"+49", mask:"### ########",   digits:10},
+    {code:"PL",flag:"🇵🇱",name:"Польша",      dial:"+48", mask:"### ### ###",    digits:9 },
+    {code:"CZ",flag:"🇨🇿",name:"Чехия",       dial:"+420",mask:"### ### ###",    digits:9 },
+    {code:"IL",flag:"🇮🇱",name:"Израиль",     dial:"+972",mask:"## ### ####",    digits:9 },
+    {code:"TR",flag:"🇹🇷",name:"Турция",      dial:"+90", mask:"### ### ## ##",  digits:10},
+    {code:"US",flag:"🇺🇸",name:"США",         dial:"+1",  mask:"(###) ###-####", digits:10},
+    {code:"GB",flag:"🇬🇧",name:"Великобритания",dial:"+44",mask:"#### ######",   digits:10},
+    {code:"FR",flag:"🇫🇷",name:"Франция",     dial:"+33", mask:"# ## ## ## ##",  digits:9 },
+    {code:"AE",flag:"🇦🇪",name:"ОАЭ",         dial:"+971",mask:"## ### ####",    digits:9 },
+    {code:"OTHER",flag:"🌍",name:"Другая страна",dial:"+",mask:"##############",digits:15}
+  ];
+
+  var current = C[0];
+
+  function findByCode(code) {
+    for (var i=0; i<C.length; i++) { if (C[i].code === code) return C[i]; }
+    return C[0];
+  }
+
+  function renderList(filter) {
+    var el = document.getElementById("country-options");
+    if (!el) return;
+    var list = filter ? C.filter(function(c){
+      return c.name.toLowerCase().indexOf(filter.toLowerCase()) > -1 || c.dial.indexOf(filter) > -1;
+    }) : C;
+    var html = "";
+    for (var i=0; i<list.length; i++) {
+      var c = list[i];
+      html += '<div data-code="' + c.code + '" class="c-opt" style="display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;font-size:14px;">';
+      html += '<span style="font-size:18px">' + c.flag + '</span>';
+      html += '<span style="flex:1">' + c.name + '</span>';
+      html += '<span style="color:#7A6570;font-size:12px">' + c.dial + '</span>';
+      html += '</div>';
+    }
+    el.innerHTML = html;
+    var opts = el.querySelectorAll(".c-opt");
+    for (var j=0; j<opts.length; j++) {
+      opts[j].addEventListener("mouseover", function(){ this.style.background="#F7F2EC"; });
+      opts[j].addEventListener("mouseout",  function(){ this.style.background=""; });
+      opts[j].addEventListener("click", function(){ selectCountry(this.getAttribute("data-code")); });
+    }
+  }
+
+  window.selectCountry = function(code) {
+    var c = findByCode(code);
+    current = c;
+    document.getElementById("flag-display").textContent = c.flag;
+    document.getElementById("code-display").textContent = c.dial;
+    var inp = document.getElementById("phone-input");
+    inp.placeholder = c.mask.replace(/#/g,"0");
+    inp.value = "";
+    document.getElementById("country-list").style.display = "none";
+    var search = document.getElementById("country-search");
+    if (search) { search.value = ""; renderList(""); }
+    inp.focus();
+  };
+
+  window.filterCountries = function(val) { renderList(val); };
+
+  window.toggleCountryList = function(e) {
+    e.stopPropagation();
+    var list = document.getElementById("country-list");
+    var open = list.style.display !== "none";
+    list.style.display = open ? "none" : "block";
+    if (!open) {
+      renderList("");
+      setTimeout(function(){ var s=document.getElementById("country-search"); if(s) s.focus(); }, 60);
+    }
+  };
+
+  document.addEventListener("click", function() {
+    var l = document.getElementById("country-list");
+    if (l) l.style.display = "none";
+  });
+
+  window.formatPhone = function(input) {
+    var digits = input.value.replace(/\D/g, "");
+    var mask = current.mask;
+    var result = "";
+    var di = 0;
+    for (var i=0; i<mask.length && di<digits.length; i++) {
+      if (mask[i] === "#") { result += digits[di++]; }
+      else if (di > 0) { result += mask[i]; }
+    }
+    input.value = result;
+  };
+
+  /* Auto-detect by IP */
+  fetch("https://ipapi.co/json/")
+    .then(function(r){ return r.json(); })
+    .then(function(d){ selectCountry(d.country_code || "RU"); })
+    .catch(function(){ selectCountry("RU"); });
+
+  renderList("");
+
+  /* ── HERO WORDS ── */
+  var h1 = document.querySelector(".hero h1");
   if (h1) {
     var words = h1.textContent.trim().split(/\s+/);
     h1.innerHTML = words.map(function(w, i) {
-      return '<span class="hw" style="animation-delay:' + (0.45 + i * 0.08) + 's">' + w + '</span>';
-    }).join(' ');
+      return '<span class="hw" style="animation-delay:' + (0.45 + i*0.08) + 's">' + w + '</span>';
+    }).join(" ");
   }
 
-  /* INTERSECTION OBSERVER — Scroll staging */
-  var supported = typeof IntersectionObserver !== 'undefined';
+  /* ── TRUST NUM DELAYS ── */
+  document.querySelectorAll(".trust-num").forEach(function(el, i) {
+    el.style.animationDelay = (0.8 + i*0.13) + "s";
+  });
 
-  if (supported) {
+  /* ── INTERSECTION OBSERVER ── */
+  if (typeof IntersectionObserver !== "undefined") {
     var io = new IntersectionObserver(function(entries) {
       entries.forEach(function(e) {
         if (!e.isIntersecting) return;
-        var el = e.target;
-        el.classList.add('on');
-        /* Trust nums */
-        el.querySelectorAll && el.querySelectorAll('.trust-num').forEach(function(n, i) {
-          setTimeout(function() { n.classList.add('on'); }, 500 + i * 130);
+        e.target.classList.add("on");
+        e.target.querySelectorAll(".trust-num").forEach(function(n,i) {
+          setTimeout(function(){ n.classList.add("on"); }, 500 + i*130);
         });
-        io.unobserve(el);
+        io.unobserve(e.target);
       });
-    }, { threshold: 0.08 });
+    }, {threshold: 0.08});
 
-    /* Sections get will-reveal */
-    document.querySelectorAll('section:not(.hero), .anon-block, .mid-cta').forEach(function(el) {
-      el.classList.add('will-reveal');
+    document.querySelectorAll("section:not(.hero), .anon-block, .mid-cta").forEach(function(el) {
+      el.classList.add("will-reveal");
       io.observe(el);
     });
-
-    /* Individual animated elements */
-    document.querySelectorAll('.story-card, .why-card, .step, .anon-item, .form-card').forEach(function(el) {
+    document.querySelectorAll(".story-card, .why-card, .step, .anon-item, .form-card").forEach(function(el) {
       io.observe(el);
     });
   } else {
-    /* Fallback: show everything immediately */
-    document.querySelectorAll('.story-card,.why-card,.step,.anon-item,.form-card').forEach(function(el) {
-      el.classList.add('on');
+    document.querySelectorAll(".story-card,.why-card,.step,.anon-item,.form-card").forEach(function(el) {
+      el.classList.add("on");
     });
   }
 
-  /* Hero always visible */
-  var hero = document.querySelector('.hero');
-  if (hero) { hero.style.opacity = '1'; }
+  var hero = document.querySelector(".hero");
+  if (hero) hero.style.opacity = "1";
 
-  /* 3. LIVE COUNTER — Secondary Action */
+  /* ── LIVE COUNTER ── */
   var count = 34;
-  var counterEls = document.querySelectorAll('.online-num');
-  var eyebrow = document.querySelector('.eyebrow-text');
-
+  var counterEls = document.querySelectorAll(".online-num");
+  var eyebrow = document.querySelector(".eyebrow-text");
   setInterval(function() {
-    count = Math.min(42, Math.max(28, count + (Math.random() < 0.5 ? 1 : -1)));
+    count = Math.min(42, Math.max(28, count + (Math.random()<0.5?1:-1)));
     counterEls.forEach(function(el) {
       el.textContent = count;
-      el.classList.remove('pop');
+      el.classList.remove("pop");
       void el.offsetWidth;
-      el.classList.add('pop');
+      el.classList.add("pop");
     });
-    if (eyebrow) eyebrow.textContent = count + '\u00a0экспертов онлайн прямо сейчас';
+    if (eyebrow) eyebrow.textContent = count + "\u00a0экспертов онлайн прямо сейчас";
   }, 4800);
 
-  /* FORM SUBMIT */
+  /* ── FORM SUBMIT ── */
   window.submitForm = function(e) {
     e.preventDefault();
-    var input = document.getElementById('phone-input');
-    var error = document.getElementById('phone-error');
-    var val = input.value.replace(/\D/g, '');
-
-    if (val.length < 10) {
-      error.style.display = 'block';
-      input.style.borderColor = '#C62828';
-      input.style.transform = 'translateX(0)';
-      /* shake */
+    var input = document.getElementById("phone-input");
+    var error = document.getElementById("phone-error");
+    var val = input.value.replace(/\D/g, "");
+    var minDigits = current ? current.digits - 2 : 8;
+    if (val.length < minDigits) {
+      error.style.display = "block";
+      input.style.borderColor = "#C62828";
       var s = 0;
       var shake = setInterval(function() {
-        input.style.transform = s % 2 === 0 ? 'translateX(5px)' : 'translateX(-5px)';
+        input.style.transform = s%2===0 ? "translateX(5px)" : "translateX(-5px)";
         s++;
-        if (s > 5) { clearInterval(shake); input.style.transform = 'translateX(0)'; }
+        if (s>5) { clearInterval(shake); input.style.transform = "translateX(0)"; }
       }, 60);
       return;
     }
-
-    error.style.display = 'none';
-
-    /* Hide form, show thank you */
-    var formCard = document.getElementById('form-card');
-    var tyCard   = document.getElementById('thankyou-card');
-    var btn      = document.getElementById('submit-btn');
-
-    btn.textContent = 'Отправляем...';
-    btn.style.opacity = '0.7';
-    btn.style.pointerEvents = 'none';
-
+    error.style.display = "none";
+    var btn = document.getElementById("submit-btn");
+    btn.textContent = "Отправляем...";
+    btn.style.opacity = "0.7";
+    btn.style.pointerEvents = "none";
     setTimeout(function() {
-      formCard.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-      formCard.style.opacity = '0';
-      formCard.style.transform = 'translateY(-10px)';
+      var formCard = document.getElementById("form-card");
+      var tyCard   = document.getElementById("thankyou-card");
+      formCard.style.transition = "opacity 0.3s ease, transform 0.3s ease";
+      formCard.style.opacity = "0";
+      formCard.style.transform = "translateY(-10px)";
       setTimeout(function() {
-        formCard.style.display = 'none';
-        tyCard.style.display = 'block';
-        tyCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        formCard.style.display = "none";
+        tyCard.style.display = "block";
+        tyCard.scrollIntoView({behavior:"smooth", block:"center"});
       }, 300);
     }, 600);
   };
