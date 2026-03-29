@@ -10,18 +10,21 @@
 <!-- font-display=block: браузер ждёт шрифт и не показывает системный -->
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500&display=block" rel="stylesheet">
 <style>
-  /* Скрываем текст пока шрифты не загрузились */
-  .fonts-loading body { visibility: hidden; }
+  /* Плавное появление страницы после загрузки шрифтов */
+  body { opacity: 0; transition: opacity 0.25s ease; }
+  body.fonts-ready { opacity: 1; }
 </style>
 <script>
-  document.documentElement.classList.add('fonts-loading');
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(function() {
-      document.documentElement.classList.remove('fonts-loading');
-    });
-  } else {
-    document.documentElement.classList.remove('fonts-loading');
-  }
+  window.addEventListener('load', function() {
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function() {
+        document.body.classList.add('fonts-ready');
+        window.scrollTo(0, 0);
+      });
+    } else {
+      document.body.classList.add('fonts-ready');
+    }
+  });
 </script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
