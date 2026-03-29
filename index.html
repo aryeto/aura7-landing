@@ -670,12 +670,7 @@ p.light { color: rgba(255,255,255,0.72); }
   .trust-num:nth-child(1).on { animation-delay: 0.00s; }
 
   /* Hero words */
-  .hw { display: inline-block; animation: win2 0.45s var(--back) both; }
-  @keyframes win2 {
-    0%   { opacity: 0; transform: translateY(16px); }
-    70%  { opacity: 1; transform: translateY(-2px); }
-    100% { opacity: 1; transform: translateY(0); }
-  }
+
 
   /* Counter pop */
   @keyframes cpop {
@@ -715,7 +710,7 @@ p.light { color: rgba(255,255,255,0.72); }
   </div>
 
   <h1>Что-то не даёт покоя? Получите ответ за 7 минут</h1>
-  <p class="hero-sub">Живая консультация с тарологом, астрологом или экстрасенсом — анонимно, без звонков</p>
+  <p class="hero-sub">Живая консультация с тарологом, астрологом или экстрасенсом — анонимно и конфиденциально</p>
 
   <div class="hero-cta">
     <a href="#form" class="btn">Попробовать бесплатно</a>
@@ -748,7 +743,7 @@ p.light { color: rgba(255,255,255,0.72); }
   </div>
   <div class="anon-item">
     <div class="anon-icon">🔕</div>
-    Не звоним и не присылаем рекламу без вашего согласия
+    Звонок от эксперта — ваш номер остаётся скрытым
   </div>
   <div class="anon-item">
     <div class="anon-icon">🤫</div>
@@ -951,7 +946,7 @@ p.light { color: rgba(255,255,255,0.72); }
       <input class="form-input" type="tel" placeholder="+7 (999) 000-00-00">
       <div class="phone-hint">
         <span>🔒</span>
-        <span class="phone-hint-text">Ваш номер <strong>не виден экспертам</strong>. Нужен только для входа. Не звоним и не спамим.</span>
+        <span class="phone-hint-text">Ваш номер <strong>не виден экспертам</strong>. Нужен только для входа. Номер скрыт от эксперта во время звонка.</span>
       </div>
     </div>
     <a href="#" class="btn" style="margin-top:8px;">Получить бесплатную консультацию</a>
@@ -968,16 +963,7 @@ p.light { color: rgba(255,255,255,0.72); }
 
 <script>
 (function() {
-  /* 1. HERO WORDS — Staging per word */
-  var h1 = document.querySelector('.hero h1');
-  if (h1) {
-    var words = h1.textContent.trim().split(/\s+/);
-    h1.innerHTML = words.map(function(w, i) {
-      return '<span class="hw" style="animation-delay:' + (0.15 + i * 0.07) + 's">' + w + '</span>';
-    }).join(' ');
-  }
-
-  /* 2. INTERSECTION OBSERVER — Scroll staging */
+  /* INTERSECTION OBSERVER — Scroll staging */
   var supported = typeof IntersectionObserver !== 'undefined';
 
   if (supported) {
