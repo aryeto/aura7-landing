@@ -525,7 +525,7 @@ p.light { color: rgba(255,255,255,0.72); }
   100% { opacity: 1; transform: translateX(0); }
 }
 
-.why-icon  { font-size: 22px; margin-bottom: 8px; display: block; }
+.why-icon  { display: block; margin-bottom: 10px; width: 24px; height: 24px; }
 .why-title { font-size: 14px; font-weight: 500; color: var(--white); margin-bottom: 4px; }
 .why-desc  { font-size: 12px; color: rgba(255,255,255,0.55); line-height: 1.5; }
 
@@ -538,12 +538,17 @@ p.light { color: rgba(255,255,255,0.72); }
   text-align: center;
 }
 .free-badge {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   background: var(--gold);
   color: var(--bordo);
-  font-size: 11px; font-weight: 500;
-  padding: 4px 12px; border-radius: 20px;
-  margin-bottom: 10px;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+  letter-spacing: 0.01em;
 }
 .free-title {
   font-family: 'Cormorant Garamond', Georgia, serif;
@@ -744,7 +749,7 @@ p.light { color: rgba(255,255,255,0.72); }
 
 <!-- ANON BLOCK -->
 <div class="anon-block">
-  <div class="anon-title">🔒 Полная анонимность</div>
+  <div class="anon-title"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;margin-right:4px"><rect x="5" y="11" width="14" height="10" rx="2" fill="#C9A96E" fill-opacity="0.3" stroke="#C9A96E" stroke-width="2"/><path d="M8 11V7a4 4 0 018 0v4" stroke="#C9A96E" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="16" r="1.5" fill="#C9A96E"/></svg> Полная анонимность</div>
   <div class="anon-item">
     <div class="anon-icon">👁</div>
     Ваш номер скрыт от эксперта — он никогда его не увидит
@@ -911,22 +916,22 @@ p.light { color: rgba(255,255,255,0.72); }
   <span class="label">Почему Aura7</span>
   <h2 class="light">Чем мы отличаемся</h2>
   <div class="why-card">
-    <span class="why-icon">🎙</span>
+    <span class="why-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 1C10.34 1 9 2.34 9 4v7c0 1.66 1.34 3 3 3s3-1.34 3-3V4c0-1.66-1.34-3-3-3z" fill="#C9A96E"/><path d="M19 10v1a7 7 0 01-14 0v-1" stroke="#C9A96E" stroke-width="1.8" stroke-linecap="round"/><line x1="12" y1="18" x2="12" y2="23" stroke="#C9A96E" stroke-width="1.8" stroke-linecap="round"/><line x1="8" y1="23" x2="16" y2="23" stroke="#C9A96E" stroke-width="1.8" stroke-linecap="round"/></svg></span>
     <div class="why-title">Живой разговор, не переписка</div>
     <div class="why-desc">Консультация голосом — эксперт слышит вас и отвечает в реальном времени, не через чат-бота</div>
   </div>
   <div class="why-card">
-    <span class="why-icon">✅</span>
+    <span class="why-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L4 6v6c0 5.25 3.5 10.15 8 11.35C16.5 22.15 20 17.25 20 12V6l-8-4z" fill="#C9A96E" fill-opacity="0.2" stroke="#C9A96E" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="#C9A96E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
     <div class="why-title">Каждый эксперт проверен лично</div>
     <div class="why-desc">Тестирование и испытательный период. Только 1 из 10 становится экспертом платформы</div>
   </div>
   <div class="why-card">
-    <span class="why-icon">💰</span>
+    <span class="why-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" stroke="#C9A96E" stroke-width="1.8"/><path d="M14.5 9.5A3 3 0 009 12a3 3 0 003 3h1" stroke="#C9A96E" stroke-width="1.8" stroke-linecap="round"/><path d="M15 14l1.5-1.5L15 11" stroke="#C9A96E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="7" x2="12" y2="9" stroke="#C9A96E" stroke-width="1.8" stroke-linecap="round"/><line x1="12" y1="15" x2="12" y2="17" stroke="#C9A96E" stroke-width="1.8" stroke-linecap="round"/></svg></span>
     <div class="why-title">Деньги назад если не помогло</div>
     <div class="why-desc">Если консультация прошла с проблемами или эксперт не дал ответа — вернём средства</div>
   </div>
   <div class="why-card">
-    <span class="why-icon">🔒</span>
+    <span class="why-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="11" width="14" height="10" rx="2" fill="#C9A96E" fill-opacity="0.2" stroke="#C9A96E" stroke-width="1.8"/><path d="M8 11V7a4 4 0 018 0v4" stroke="#C9A96E" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="16" r="1.5" fill="#C9A96E"/></svg></span>
     <div class="why-title">Ваш номер скрыт от эксперта</div>
     <div class="why-desc">Эксперт видит только ваше имя и вопрос. Оплата и контакты идут через сервис</div>
   </div>
@@ -938,7 +943,7 @@ p.light { color: rgba(255,255,255,0.72); }
   <h2>Первые 7 минут — в подарок</h2>
 
   <div class="free-banner">
-    <div class="free-badge">🎁 Бесплатно</div>
+    <div class="free-badge" style="display:inline-flex;align-items:center;gap:6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="#3D1A24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l2.9 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l7.1-1.01L12 2z"/></svg>Первые 7 минут бесплатно</div>
     <div class="free-title">Задайте первый вопрос<br>без оплаты</div>
     <div class="free-desc">Первые 7 минут — наш подарок.<br>Без карты, без обязательств.</div>
   </div>
@@ -953,7 +958,7 @@ p.light { color: rgba(255,255,255,0.72); }
       <label class="form-label">Номер телефона</label>
       <input class="form-input" type="tel" placeholder="+7 (999) 000-00-00">
       <div class="phone-hint">
-        <span>🔒</span>
+        <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="vertical-align:middle"><rect x="5" y="11" width="14" height="10" rx="2" fill="#C9A96E" fill-opacity="0.3" stroke="#C9A96E" stroke-width="2"/><path d="M8 11V7a4 4 0 018 0v4" stroke="#C9A96E" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="16" r="1.5" fill="#C9A96E"/></svg></span>
         <span class="phone-hint-text">Ваш номер <strong>не виден экспертам</strong>. Нужен только для входа. Номер скрыт от эксперта во время звонка.</span>
       </div>
     </div>
