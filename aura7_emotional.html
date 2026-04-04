@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aura7 — Консультация эксперта</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Geologica:wght@300;400;500&display=block" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bordo: #2E1018;
+  --bordo-mid: #4A1A28;
+  --bordo-light: #6B2A3C;
+  --gold: #C9A96E;
+  --gold-light: #E8D5B0;
+  --gold-pale: #F5ECD8;
+  --cream: #F9F4EE;
+  --cream-dark: #EFE6D8;
+  --text-dark: #1A0A10;
+  --text-mid: #3D2530;
+  --text-muted: #7A5F68;
+  --white: #FFFFFF;
+  --green: #4CAF50;
+  --expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --back: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+html, body {
+  font-family: 'Geologica', Georgia, sans-serif;
+  background: var(--cream);
+  color: var(--text-dark);
+  max-width: 390px;
+  margin: 0 auto;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+body { opacity: 0; transition: opacity 0.3s ease; }
+body.ready { opacity: 1; }
+
+/* ── HEADER ── */
+.header {
+  background: var(--bordo);
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.logo {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--gold);
+  letter-spacing: 0.05em;
+}
+.header-online {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.55);
+}
+.dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  display: inline-block;
+  animation: pdot 2.5s ease-in-out infinite;
+}
+@keyframes pdot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.4)} }
+
+/* ══════════════════════════════
+   SCREEN 1 — ВЫБОР СИТУАЦИИ
+══════════════════════════════ */
+#screen-select {
+  min-height: calc(100vh - 48px);
+  display: flex;
+  flex-direction: column;
+  padding: 32px 20px 40px;
+}
+
+.select-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--gold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  animation: fadein 0.5s ease both 0.2s;
+}
+
+.select-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 1.15;
+  color: var(--bordo);
+  margin-bottom: 10px;
+  animation: slideup 0.6s var(--expo) both 0.3s;
+}
+.select-title em {
+  font-style: italic;
+  color: var(--bordo-light);
+}
+
+.select-sub {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 32px;
+  animation: fadein 0.5s ease both 0.5s;
+}
+
+.situations {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.sit-btn {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  background: var(--white);
+  border: 1.5px solid rgba(46,16,24,0.1);
+  border-radius: 14px;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: all 0.25s var(--expo);
+  animation: slideup 0.5s var(--expo) both;
+  -webkit-tap-highlight-color: transparent;
+}
+.sit-btn:nth-child(1) { animation-delay: 0.4s; }
+.sit-btn:nth-child(2) { animation-delay: 0.5s; }
+.sit-btn:nth-child(3) { animation-delay: 0.6s; }
+.sit-btn:nth-child(4) { animation-delay: 0.7s; }
+.sit-btn:nth-child(5) { animation-delay: 0.8s; }
+
+.sit-btn:active {
+  transform: scale(0.97);
+  border-color: var(--gold);
+  background: var(--gold-pale);
+}
+
+.sit-icon {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  background: var(--cream-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.25s ease;
+}
+.sit-btn:active .sit-icon { background: rgba(201,169,110,0.2); }
+
+.sit-icon svg { width: 22px; height: 22px; }
+
+.sit-text { flex: 1; }
+.sit-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-dark);
+  margin-bottom: 2px;
+  line-height: 1.3;
+}
+.sit-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.sit-arrow {
+  color: var(--text-muted);
+  opacity: 0.4;
+  flex-shrink: 0;
+}
+
+/* ══════════════════════════════
+   SCREEN 2 — ПЕРСОНАЛИЗИРОВАННЫЙ
+══════════════════════════════ */
+#screen-personal { display: none; }
+
+/* EMPATHY BLOCK */
+.empathy {
+  background: var(--bordo);
+  padding: 28px 20px 32px;
+  position: relative;
+  overflow: hidden;
+}
+.empathy::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 180px; height: 180px;
+  border-radius: 50%;
+  background: rgba(201,169,110,0.06);
+  pointer-events: none;
+}
+
+.empathy-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 14px;
+  display: block;
+  opacity: 0;
+  animation: none;
+}
+
+.empathy-text {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 26px;
+  font-weight: 500;
+  font-style: italic;
+  line-height: 1.3;
+  color: var(--white);
+  margin-bottom: 16px;
+  opacity: 0;
+}
+
+.empathy-sub {
+  font-size: 14px;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.6;
+  opacity: 0;
+}
+
+/* TRUST STRIP */
+.trust-strip {
+  display: flex;
+  align-items: center;
+  padding: 14px 20px;
+  background: var(--bordo-mid);
+  gap: 0;
+}
+.trust-item { flex: 1; text-align: center; }
+.trust-num {
+  display: block;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--gold);
+}
+.trust-lbl { font-size: 10px; color: rgba(255,255,255,0.4); display: block; margin-top: 1px; }
+.trust-div { width: 1px; height: 28px; background: rgba(255,255,255,0.1); }
+
+/* STORY BLOCK */
+.story-section { padding: 28px 20px; }
+.section-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 16px;
+  display: block;
+}
+
+.story-card {
+  background: var(--white);
+  border-radius: 14px;
+  padding: 18px;
+  border: 1px solid rgba(46,16,24,0.08);
+}
+.story-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.story-avatar {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: var(--cream-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 17px;
+  color: var(--bordo);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.story-name { font-size: 13px; font-weight: 500; color: var(--text-dark); }
+.story-age  { font-size: 11px; color: var(--text-muted); }
+.story-topic {
+  display: inline-block;
+  background: rgba(201,169,110,0.15);
+  color: var(--bordo-light);
+  font-size: 10px;
+  font-weight: 500;
+  padding: 3px 9px;
+  border-radius: 20px;
+  margin-bottom: 10px;
+}
+.story-text { font-size: 13px; color: var(--text-mid); line-height: 1.65; margin-bottom: 12px; }
+.story-result {
+  background: var(--cream-dark);
+  padding: 11px 13px;
+  border-left: 3px solid var(--gold);
+}
+.story-result-label {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 4px;
+}
+.story-result-text { font-size: 12px; color: var(--text-mid); line-height: 1.5; }
+
+/* HOW IT WORKS */
+.how-section { padding: 0 20px 28px; background: var(--cream-dark); padding-top: 28px; }
+.how-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--bordo);
+  margin-bottom: 18px;
+}
+.steps { display: flex; flex-direction: column; }
+.step {
+  display: flex;
+  gap: 12px;
+  padding: 13px 0;
+  border-bottom: 1px solid rgba(46,16,24,0.08);
+}
+.step:last-child { border-bottom: none; }
+.step-num {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--bordo);
+  color: var(--gold);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.step-title { font-size: 14px; font-weight: 500; color: var(--text-dark); margin-bottom: 2px; }
+.step-desc  { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+
+/* EXPERTS PREVIEW */
+.experts-section { padding: 28px 20px; }
+.experts-scroll {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  margin-top: 14px;
+}
+.experts-scroll::-webkit-scrollbar { display: none; }
+.expert-card {
+  flex-shrink: 0;
+  width: 140px;
+  background: var(--white);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(46,16,24,0.1);
+}
+.expert-photo {
+  height: 155px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.ep1 { background: #B8A090; }
+.ep2 { background: #8A9BB0; }
+.ep3 { background: #A89AB0; }
+.expert-sil { text-align: center; color: rgba(255,255,255,0.3); font-size: 11px; }
+.expert-sil-head { width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,0.25); margin: 0 auto 5px; }
+.expert-sil-body { width: 52px; height: 28px; border-radius: 26px 26px 0 0; background: rgba(255,255,255,0.18); margin: 0 auto; }
+.expert-badge {
+  position: absolute; top: 7px; left: 7px;
+  background: rgba(0,0,0,0.45);
+  border-radius: 20px;
+  padding: 3px 7px;
+  font-size: 10px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+.expert-info { padding: 9px 10px; }
+.expert-name { font-size: 12px; font-weight: 500; color: var(--text-dark); margin-bottom: 2px; }
+.expert-spec { font-size: 10px; color: var(--text-muted); margin-bottom: 5px; line-height: 1.3; }
+.expert-rating { font-size: 10px; color: var(--text-muted); }
+
+/* FORM SECTION */
+.form-section { padding: 28px 20px; }
+.form-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--bordo);
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+.form-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.55;
+  margin-bottom: 20px;
+}
+
+.online-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  background: rgba(76,175,80,0.1);
+  border: 1px solid rgba(76,175,80,0.2);
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 14px;
+  font-size: 13px;
+  color: var(--text-mid);
+}
+.online-bar strong { color: #2E7D32; }
+
+.form-card {
+  background: var(--white);
+  border-radius: 14px;
+  padding: 20px;
+  border: 1px solid rgba(46,16,24,0.08);
+}
+
+.anon-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: rgba(201,169,110,0.1);
+  border-radius: 10px;
+  padding: 11px 13px;
+  margin-bottom: 16px;
+}
+.anon-notice-text { font-size: 12px; color: var(--text-mid); line-height: 1.5; }
+
+.form-label { display: block; font-size: 12px; font-weight: 500; color: var(--text-mid); margin-bottom: 5px; }
+
+.phone-row { display: flex; gap: 8px; }
+.country-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 11px;
+  min-height: 46px;
+  background: var(--cream);
+  border: 1.5px solid #E0D5D8;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-family: inherit;
+  white-space: nowrap;
+  flex-shrink: 0;
+  position: relative;
+}
+.country-drop {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  background: #fff;
+  border: 1.5px solid #E0D5D8;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  z-index: 200;
+  min-width: 220px;
+  overflow: hidden;
+}
+.country-search {
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  border-bottom: 1px solid #F0E8E8;
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  background: var(--cream);
+}
+.country-opts { max-height: 190px; overflow-y: auto; }
+.country-opt {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 13px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background 0.1s;
+}
+.country-opt:hover { background: var(--cream); }
+.country-opt span:last-child { color: var(--text-muted); font-size: 11px; margin-left: auto; }
+
+.phone-input {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1.5px solid #E0D5D8;
+  font-size: 15px;
+  font-family: inherit;
+  color: var(--text-dark);
+  background: var(--cream);
+  outline: none;
+  -webkit-appearance: none;
+  transition: border-color 0.2s ease;
+}
+.phone-input:focus { border-color: var(--bordo); }
+
+.phone-error { display: none; font-size: 12px; color: #C62828; margin: 6px 0 0; }
+
+.btn {
+  display: block;
+  width: 100%;
+  background: var(--gold);
+  color: var(--bordo);
+  font-family: 'Geologica', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 15px 20px;
+  border-radius: 12px;
+  border: none;
+  text-align: center;
+  cursor: pointer;
+  margin-top: 14px;
+  animation: breathe 5s ease-in-out infinite 4s;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn:active { opacity: 0.85; }
+@keyframes breathe {
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.018)}
+}
+
+.form-agree {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 12px;
+  line-height: 1.5;
+}
+.form-agree a { color: var(--bordo); }
+
+/* THANK YOU */
+#thankyou-card { display: none; }
+.ty-wrap { text-align: center; padding: 12px 0 8px; }
+.ty-icon {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: rgba(201,169,110,0.12);
+  border: 2px solid var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 18px;
+  animation: tyring 0.5s var(--back) both 0.1s;
+}
+@keyframes tyring { 0%{transform:scale(0.6);opacity:0} 100%{transform:scale(1);opacity:1} }
+.ty-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--bordo);
+  margin-bottom: 8px;
+}
+.ty-sub { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 18px; }
+.ty-tips {
+  background: var(--cream-dark);
+  border-radius: 10px;
+  padding: 14px 16px;
+  text-align: left;
+  margin-bottom: 14px;
+}
+.ty-tips-label {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 10px;
+}
+.ty-tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: var(--text-mid);
+  line-height: 1.5;
+}
+.ty-tip:last-child { margin-bottom: 0; }
+.ty-anon { font-size: 11px; color: var(--text-muted); text-align: center; }
+
+/* FOOTER */
+.footer { background: var(--bordo); padding: 22px 20px; text-align: center; }
+.footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 19px; color: var(--gold); margin-bottom: 8px; }
+.footer-text { font-size: 10px; color: rgba(255,255,255,0.28); line-height: 1.6; }
+
+/* ANIMATIONS */
+@keyframes fadein { 0%{opacity:0} 100%{opacity:1} }
+@keyframes slideup { 0%{opacity:0;transform:translateY(18px)} 100%{opacity:1;transform:translateY(0)} }
+@keyframes revealup { 0%{opacity:0;transform:translateY(20px)} 100%{opacity:1;transform:translateY(0)} }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">aura7</div>
+  <div class="header-online">
+    <span class="dot"></span>
+    <span id="hdr-count">34</span> онлайн
+  </div>
+</header>
+
+<!-- ══ SCREEN 1: ВЫБОР СИТУАЦИИ ══ -->
+<div id="screen-select">
+  <div class="select-eyebrow">
+    <span class="dot"></span>
+    Сервис эзотерических консультаций
+  </div>
+
+  <h1 class="select-title">С чем вы <em>пришли</em> сегодня?</h1>
+  <p class="select-sub">Выберите — и мы подберём эксперта именно для вашей ситуации</p>
+
+  <div class="situations">
+
+    <button class="sit-btn" onclick="selectSit('love')">
+      <div class="sit-icon">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 21C12 21 3 15.5 3 9a5 5 0 0110 0 5 5 0 0110 0c0 6.5-9 12-9 12z" fill="#C9A96E" fill-opacity="0.3" stroke="#C9A96E" stroke-width="1.6" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="sit-text">
+        <div class="sit-title">Отношения и любовь</div>
+        <div class="sit-sub">Партнёр, расставание, чувства</div>
+      </div>
+      <svg class="sit-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+
+    <button class="sit-btn" onclick="selectSit('work')">
+      <div class="sit-icon">
+        <svg viewBox="0 0 24 24" fill="none"><rect x="2" y="7" width="20" height="14" rx="2" fill="#C9A96E" fill-opacity="0.2" stroke="#C9A96E" stroke-width="1.6"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" stroke="#C9A96E" stroke-width="1.6" stroke-linecap="round"/><line x1="12" y1="12" x2="12" y2="16" stroke="#C9A96E" stroke-width="1.6" stroke-linecap="round"/><line x1="10" y1="14" x2="14" y2="14" stroke="#C9A96E" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </div>
+      <div class="sit-text">
+        <div class="sit-title">Работа и деньги</div>
+        <div class="sit-sub">Карьера, бизнес, финансы</div>
+      </div>
+      <svg class="sit-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+
+    <button class="sit-btn" onclick="selectSit('family')">
+      <div class="sit-icon">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="9" cy="7" r="3" fill="#C9A96E" fill-opacity="0.2" stroke="#C9A96E" stroke-width="1.6"/><circle cx="16" cy="8" r="2.5" fill="#C9A96E" fill-opacity="0.2" stroke="#C9A96E" stroke-width="1.6"/><path d="M3 19c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="#C9A96E" stroke-width="1.6" stroke-linecap="round"/><path d="M16 13c2.2 0 4 1.8 4 4" stroke="#C9A96E" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </div>
+      <div class="sit-text">
+        <div class="sit-title">Семья и близкие</div>
+        <div class="sit-sub">Дети, родители, конфликты</div>
+      </div>
+      <svg class="sit-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+
+    <button class="sit-btn" onclick="selectSit('anxiety')">
+      <div class="sit-icon">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" fill="#C9A96E" fill-opacity="0.15" stroke="#C9A96E" stroke-width="1.6"/><path d="M12 8v4" stroke="#C9A96E" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="16" r="1" fill="#C9A96E"/></svg>
+      </div>
+      <div class="sit-text">
+        <div class="sit-title">Тревога и растерянность</div>
+        <div class="sit-sub">Не знаю что делать, страшно</div>
+      </div>
+      <svg class="sit-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+
+    <button class="sit-btn" onclick="selectSit('curious')">
+      <div class="sit-icon">
+        <svg viewBox="0 0 24 24" fill="none"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" fill="#C9A96E" fill-opacity="0.2" stroke="#C9A96E" stroke-width="1.6" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="sit-text">
+        <div class="sit-title">Просто интересно</div>
+        <div class="sit-sub">Хочу попробовать, узнать о себе</div>
+      </div>
+      <svg class="sit-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+
+  </div>
+</div>
+
+<!-- ══ SCREEN 2: ПЕРСОНАЛИЗИРОВАННЫЙ ══ -->
+<div id="screen-personal">
+
+  <!-- EMPATHY -->
+  <div class="empathy">
+    <span class="empathy-label" id="emp-label">Вы не одни</span>
+    <div class="empathy-text" id="emp-text"></div>
+    <div class="empathy-sub" id="emp-sub"></div>
+  </div>
+
+  <!-- TRUST -->
+  <div class="trust-strip">
+    <div class="trust-item">
+      <span class="trust-num">200+</span>
+      <span class="trust-lbl">экспертов</span>
+    </div>
+    <div class="trust-div"></div>
+    <div class="trust-item">
+      <span class="trust-num">2 млн</span>
+      <span class="trust-lbl">консультаций</span>
+    </div>
+    <div class="trust-div"></div>
+    <div class="trust-item">
+      <span class="trust-num">15 лет</span>
+      <span class="trust-lbl">на рынке</span>
+    </div>
+  </div>
+
+  <!-- STORY -->
+  <div class="story-section">
+    <span class="section-label">Похожая история</span>
+    <div class="story-card">
+      <div class="story-user">
+        <div class="story-avatar" id="story-avatar">О</div>
+        <div>
+          <div class="story-name" id="story-name">Ольга, 35 лет</div>
+          <div class="story-age" id="story-city">Москва</div>
+        </div>
+      </div>
+      <div class="story-topic" id="story-topic">💔 Отношения</div>
+      <p class="story-text" id="story-text"></p>
+      <div class="story-result">
+        <div class="story-result-label">Что изменилось</div>
+        <div class="story-result-text" id="story-result"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="how-section">
+    <span class="section-label">Как это работает</span>
+    <div class="how-title">Три шага до ответа</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div>
+          <div class="step-title">Оставьте номер телефона</div>
+          <div class="step-desc">Только для входа — эксперт его не видит. Занимает 10 секунд</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div>
+          <div class="step-title">Выберите эксперта</div>
+          <div class="step-desc">Таролог, астролог, экстрасенс — смотрите рейтинг и отзывы реальных клиентов</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div>
+          <div class="step-title">Получите ответ</div>
+          <div class="step-desc">Эксперт позвонит в течение 2 минут. Первая консультация бесплатно — до 7 минут</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXPERTS -->
+  <div class="experts-section">
+    <span class="section-label">Эксперты на линии</span>
+    <div id="exp-subtitle" style="font-size:13px;color:var(--text-muted);margin-bottom:2px;"></div>
+    <div class="experts-scroll">
+      <div class="expert-card">
+        <div class="expert-photo ep1">
+          <div class="expert-sil"><div class="expert-sil-head"></div><div class="expert-sil-body"></div><div style="margin-top:5px">фото</div></div>
+          <div class="expert-badge"><span class="dot" style="width:5px;height:5px"></span> Онлайн</div>
+        </div>
+        <div class="expert-info">
+          <div class="expert-name">Вера Кант</div>
+          <div class="expert-spec" id="exp1-spec">Таролог, астролог</div>
+          <div class="expert-rating">⭐ 5.0 · 18 лет</div>
+        </div>
+      </div>
+      <div class="expert-card">
+        <div class="expert-photo ep2">
+          <div class="expert-sil"><div class="expert-sil-head"></div><div class="expert-sil-body"></div><div style="margin-top:5px">фото</div></div>
+          <div class="expert-badge"><span class="dot" style="width:5px;height:5px"></span> Онлайн</div>
+        </div>
+        <div class="expert-info">
+          <div class="expert-name">Демьян Верес</div>
+          <div class="expert-spec" id="exp2-spec">Таролог, нумеролог</div>
+          <div class="expert-rating">⭐ 4.9 · 12 лет</div>
+        </div>
+      </div>
+      <div class="expert-card">
+        <div class="expert-photo ep3">
+          <div class="expert-sil"><div class="expert-sil-head"></div><div class="expert-sil-body"></div><div style="margin-top:5px">фото</div></div>
+          <div class="expert-badge" style="color:rgba(255,255,255,0.5)">Офлайн</div>
+        </div>
+        <div class="expert-info">
+          <div class="expert-name">Эва Рентова</div>
+          <div class="expert-spec" id="exp3-spec">Таролог, экстрасенс</div>
+          <div class="expert-rating">⭐ 5.0 · 15 лет</div>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:11px;color:var(--text-muted);text-align:center;margin-top:12px;">Только 1 из 10 претендентов становится экспертом Aura7</p>
+  </div>
+
+  <!-- FORM -->
+  <div class="form-section" id="form-section">
+    <div class="form-title" id="form-title">Первая консультация бесплатно — до 7 минут</div>
+    <div class="form-sub" id="form-sub">Оставьте номер — эксперт позвонит в течение 2 минут</div>
+
+    <div class="online-bar">
+      <span class="dot" style="width:7px;height:7px"></span>
+      Сейчас онлайн <strong><span class="online-num">34</span>&nbsp;эксперта</strong> — готовы ответить
+    </div>
+
+    <div class="form-card" id="form-card">
+      <div class="anon-notice">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px"><rect x="5" y="11" width="14" height="10" rx="2" fill="#C9A96E" fill-opacity="0.3" stroke="#C9A96E" stroke-width="1.8"/><path d="M8 11V7a4 4 0 018 0v4" stroke="#C9A96E" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="16" r="1.2" fill="#C9A96E"/></svg>
+        <span class="anon-notice-text">Ваш номер <strong>не виден эксперту</strong>. Нужен только для входа в сервис. Анонимно и конфиденциально.</span>
+      </div>
+
+      <label class="form-label">Номер телефона</label>
+      <div class="phone-row">
+        <div style="position:relative;flex-shrink:0;">
+          <button class="country-btn" id="country-btn" onclick="toggleDrop(event)">
+            <span id="flag-d">🇷🇺</span>
+            <span id="code-d" style="color:var(--text-mid);font-weight:500;font-size:14px;">+7</span>
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" style="opacity:0.35"><path d="M6 9l6 6 6-6" stroke="#1A0A10" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="country-drop" id="country-drop">
+            <input class="country-search" type="text" placeholder="Поиск..." oninput="filterC(this.value)">
+            <div class="country-opts" id="country-opts"></div>
+          </div>
+        </div>
+        <input class="phone-input" type="tel" id="phone-input" placeholder="000 000-00-00" oninput="fmtPhone(this)">
+      </div>
+      <div class="phone-error" id="phone-error">Введите корректный номер</div>
+
+      <button class="btn" id="submit-btn" onclick="submitF(event)">Получить бесплатную консультацию</button>
+      <p class="form-agree">Нажимая кнопку, вы соглашаетесь с <a href="#">условиями</a> сервиса. 18+, развлекательные цели.</p>
+    </div>
+
+    <!-- THANK YOU -->
+    <div class="form-card" id="thankyou-card">
+      <div class="ty-wrap">
+        <div class="ty-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#C9A96E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="ty-title">Заявка принята!</div>
+        <div class="ty-sub">Эксперт свяжется с вами в течение <strong style="color:var(--bordo)">2 минут</strong>. Держите телефон под рукой.</div>
+        <div class="ty-tips">
+          <div class="ty-tips-label">Пока ждёте</div>
+          <div class="ty-tip">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="9" stroke="#C9A96E" stroke-width="1.6"/><path d="M12 8v4l2.5 2.5" stroke="#C9A96E" stroke-width="1.6" stroke-linecap="round"/></svg>
+            Подготовьте свой вопрос — чем конкретнее, тем точнее ответ
+          </div>
+          <div class="ty-tip">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z" stroke="#C9A96E" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Звонок будет с незнакомого номера — это нормально, это эксперт
+          </div>
+        </div>
+        <div class="ty-anon">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;margin-right:4px"><rect x="5" y="11" width="14" height="10" rx="2" stroke="#C9A96E" stroke-width="2"/><path d="M8 11V7a4 4 0 018 0v4" stroke="#C9A96E" stroke-width="2" stroke-linecap="round"/></svg>
+          Ваш номер не передаётся эксперту напрямую
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-logo">aura7</div>
+    <p class="footer-text">© 2009–2026 Aura7. Все права защищены.<br>Содержит информацию для лиц 18+.<br>Используется исключительно в развлекательных целях.</p>
+  </footer>
+
+</div><!-- /screen-personal -->
+
+<script>
+(function() {
+
+  /* ── CONTENT PER SITUATION ── */
+  var SITS = {
+    love: {
+      empLabel: "Вы не одни в этом",
+      empText: "Когда в отношениях что-то идёт не так — это одно из самых тяжёлых переживаний",
+      empSub: "Тысячи людей обращаются к нам именно с этим. Таролог поможет увидеть ситуацию со стороны и понять что делать дальше.",
+      storyAvatar: "О", storyName: "Ольга, 35 лет", storyCity: "Москва",
+      storyTopic: "💔 Отношения",
+      storyText: "Расстались с партнёром внезапно, после 9 лет. Голова понимает что пора двигаться, но эмоционально замерла. Есть ли шанс у этих отношений?",
+      storyResult: "Таролог помогла разложить всё по полочкам. Я поняла что держало меня. Через 3 недели он написал сам — и я уже знала что ответить.",
+      expSub: "Специалисты по отношениям онлайн",
+      exp1: "Таролог, рунолог", exp2: "Таролог, астролог", exp3: "Таролог, ясновидящая",
+      formTitle: "Узнайте есть ли будущее у ваших отношений",
+      formSub: "Таролог даст конкретный ответ — без общих фраз. Первая консультация бесплатно — до 7 минут."
+    },
+    work: {
+      empLabel: "Понимаем это ощущение",
+      empText: "Когда застрял на месте и не видишь пути — это изматывает сильнее, чем кажется",
+      empSub: "Нумеролог или астролог поможет увидеть ваш потенциал и понять в каком направлении двигаться.",
+      storyAvatar: "Ю", storyName: "Юлия, 34 года", storyCity: "Екатеринбург",
+      storyTopic: "💼 Работа",
+      storyText: "Кажется что никуда не двигаюсь на текущем месте. Возможен ли рост или стоит уходить? Страшно ошибиться.",
+      storyResult: "После консультации решилась на разговор с руководством. Через месяц получила повышение. Теперь жалею что не обратилась раньше.",
+      expSub: "Эксперты по карьере и финансам",
+      exp1: "Нумеролог, астролог", exp2: "Таролог, нумеролог", exp3: "Астролог, экстрасенс",
+      formTitle: "Узнайте что вас ждёт в карьере",
+      formSub: "Нумеролог или астролог разберёт вашу ситуацию. Первая консультация бесплатно — до 7 минут."
+    },
+    family: {
+      empLabel: "Семья — это непросто",
+      empText: "Конфликты с близкими ранят сильнее всего — потому что они важны",
+      empSub: "Эксперт поможет увидеть ситуацию со стороны и найти путь к пониманию.",
+      storyAvatar: "Н", storyName: "Наталья, 42 года", storyCity: "Санкт-Петербург",
+      storyTopic: "👨‍👩‍👧 Семья",
+      storyText: "Конфликт с дочерью длится уже полгода. Она перестала общаться. Я не понимаю что сделала не так и как это исправить.",
+      storyResult: "Таролог помогла мне понять мою роль в этом конфликте. Я сделала первый шаг — дочь откликнулась. Мы разговариваем.",
+      expSub: "Специалисты по семейным вопросам",
+      exp1: "Таролог, психолог", exp2: "Экстрасенс, таролог", exp3: "Астролог, нумеролог",
+      formTitle: "Найдите путь к близким",
+      formSub: "Эксперт поможет разобраться в ситуации. Первая консультация бесплатно — до 7 минут."
+    },
+    anxiety: {
+      empLabel: "Мы слышим вас",
+      empText: "Когда всё навалилось и непонятно за что хвататься — это один из самых тяжёлых моментов",
+      empSub: "Иногда нужен взгляд со стороны — человек который выслушает и поможет увидеть выход.",
+      storyAvatar: "А", storyName: "Анна, 29 лет", storyCity: "Новосибирск",
+      storyTopic: "😰 Тревога",
+      storyText: "Ощущение что всё идёт не так. Работа, отношения, здоровье — всё одновременно. Не знаю с чего начать и что вообще делать.",
+      storyResult: "Экстрасенс помогла мне расставить приоритеты. После консультации стало легче дышать. Появилось ощущение что я справлюсь.",
+      expSub: "Эксперты которые умеют слушать",
+      exp1: "Экстрасенс, таролог", exp2: "Ясновидящая", exp3: "Таролог, рунолог",
+      formTitle: "Выговоритесь — станет легче",
+      formSub: "Эксперт выслушает и поможет найти опору. Первая консультация бесплатно — до 7 минут."
+    },
+    curious: {
+      empLabel: "Хорошее начало",
+      empText: "Любопытство — это уже сигнал. Иногда мы ищем подтверждение тому, что уже чувствуем",
+      empSub: "Пробная консультация ни к чему не обязывает. Просто попробуйте — и сами решите.",
+      storyAvatar: "М", storyName: "Марина, 27 лет", storyCity: "Казань",
+      storyTopic: "🔮 Интерес",
+      storyText: "Подруга посоветовала попробовать. Я скептически относилась — думала что это всё несерьёзно. Решила просто проверить.",
+      storyResult: "Таролог рассказала вещи которые никто не мог знать. Я была в шоке. Теперь обращаюсь раз в несколько месяцев — это работает.",
+      expSub: "Начните с бесплатной консультации",
+      exp1: "Таролог, астролог", exp2: "Нумеролог", exp3: "Экстрасенс",
+      formTitle: "Попробуйте — первая консультация бесплатно — до 7 минут",
+      formSub: "Без обязательств. Просто посмотрите как это работает."
+    }
+  };
+
+  /* ── COUNTRIES ── */
+  var CC = [
+    {c:"RU",f:"🇷🇺",n:"Россия",d:"+7",m:"### ###-##-##",l:10},
+    {c:"BY",f:"🇧🇾",n:"Беларусь",d:"+375",m:"## ###-##-##",l:9},
+    {c:"UA",f:"🇺🇦",n:"Украина",d:"+380",m:"## ###-##-##",l:9},
+    {c:"KZ",f:"🇰🇿",n:"Казахстан",d:"+7",m:"### ###-##-##",l:10},
+    {c:"UZ",f:"🇺🇿",n:"Узбекистан",d:"+998",m:"## ###-##-##",l:9},
+    {c:"AZ",f:"🇦🇿",n:"Азербайджан",d:"+994",m:"## ###-##-##",l:9},
+    {c:"AM",f:"🇦🇲",n:"Армения",d:"+374",m:"## ##-##-##",l:8},
+    {c:"GE",f:"🇬🇪",n:"Грузия",d:"+995",m:"### ##-##-##",l:9},
+    {c:"MD",f:"🇲🇩",n:"Молдова",d:"+373",m:"## ###-###",l:8},
+    {c:"KG",f:"🇰🇬",n:"Кыргызстан",d:"+996",m:"### ##-##-##",l:9},
+    {c:"DE",f:"🇩🇪",n:"Германия",d:"+49",m:"### ########",l:10},
+    {c:"PL",f:"🇵🇱",n:"Польша",d:"+48",m:"### ### ###",l:9},
+    {c:"IL",f:"🇮🇱",n:"Израиль",d:"+972",m:"## ### ####",l:9},
+    {c:"TR",f:"🇹🇷",n:"Турция",d:"+90",m:"### ### ## ##",l:10},
+    {c:"AE",f:"🇦🇪",n:"ОАЭ",d:"+971",m:"## ### ####",l:9},
+    {c:"US",f:"🇺🇸",n:"США",d:"+1",m:"(###) ###-####",l:10},
+    {c:"GB",f:"🇬🇧",n:"Великобритания",d:"+44",m:"#### ######",l:10},
+    {c:"OTHER",f:"🌍",n:"Другая страна",d:"+",m:"##############",l:15}
+  ];
+  var cur = CC[0];
+
+  function findC(code) {
+    for (var i=0;i<CC.length;i++) if (CC[i].c===code) return CC[i];
+    return CC[0];
+  }
+
+  function renderC(filter) {
+    var el = document.getElementById("country-opts");
+    if (!el) return;
+    var list = filter ? CC.filter(function(c){
+      return c.n.toLowerCase().indexOf(filter.toLowerCase())>-1 || c.d.indexOf(filter)>-1;
+    }) : CC;
+    var h = "";
+    for (var i=0;i<list.length;i++) {
+      h += '<div class="country-opt" data-c="'+list[i].c+'">';
+      h += '<span style="font-size:17px">'+list[i].f+'</span>';
+      h += '<span>'+list[i].n+'</span>';
+      h += '<span>'+list[i].d+'</span></div>';
+    }
+    el.innerHTML = h;
+    el.querySelectorAll(".country-opt").forEach(function(o){
+      o.addEventListener("click", function(){ selC(this.getAttribute("data-c")); });
+    });
+  }
+
+  function selC(code, noFocus) {
+    cur = findC(code);
+    document.getElementById("flag-d").textContent = cur.f;
+    document.getElementById("code-d").textContent = cur.d;
+    var inp = document.getElementById("phone-input");
+    inp.placeholder = cur.m.replace(/#/g,"0");
+    inp.value = "";
+    document.getElementById("country-drop").style.display = "none";
+    var s = document.getElementById("country-opts");
+    if (s) { var cs = document.querySelector(".country-search"); if(cs){cs.value="";} renderC(""); }
+    if (!noFocus) inp.focus();
+  }
+
+  window.toggleDrop = function(e) {
+    e.stopPropagation();
+    var d = document.getElementById("country-drop");
+    var open = d.style.display !== "none";
+    d.style.display = open ? "none" : "block";
+    if (!open) { renderC(""); setTimeout(function(){ var s=document.querySelector(".country-search"); if(s)s.focus(); },50); }
+  };
+  window.filterC = function(v) { renderC(v); };
+  document.addEventListener("click", function(){ var d=document.getElementById("country-drop"); if(d) d.style.display="none"; });
+
+  window.fmtPhone = function(inp) {
+    var digits = inp.value.replace(/\D/g,"");
+    var mask = cur.m, res = "", di = 0;
+    for (var i=0;i<mask.length&&di<digits.length;i++) {
+      if (mask[i]==="#") res+=digits[di++];
+      else if (di>0) res+=mask[i];
+    }
+    inp.value = res;
+  };
+
+  /* ── SELECT SITUATION ── */
+  window.selectSit = function(key) {
+    var sit = SITS[key];
+    if (!sit) return;
+
+    /* Fill empathy */
+    document.getElementById("emp-label").textContent = sit.empLabel;
+    document.getElementById("emp-text").textContent = sit.empText;
+    document.getElementById("emp-sub").textContent = sit.empSub;
+
+    /* Fill story */
+    document.getElementById("story-avatar").textContent = sit.storyAvatar;
+    document.getElementById("story-name").textContent = sit.storyName;
+    document.getElementById("story-city").textContent = sit.storyCity;
+    document.getElementById("story-topic").textContent = sit.storyTopic;
+    document.getElementById("story-text").textContent = sit.storyText;
+    document.getElementById("story-result").textContent = sit.storyResult;
+
+    /* Fill experts */
+    document.getElementById("exp-subtitle").textContent = sit.expSub;
+    document.getElementById("exp1-spec").textContent = sit.exp1;
+    document.getElementById("exp2-spec").textContent = sit.exp2;
+    document.getElementById("exp3-spec").textContent = sit.exp3;
+
+    /* Fill form */
+    document.getElementById("form-title").textContent = sit.formTitle;
+    document.getElementById("form-sub").textContent = sit.formSub;
+
+    /* Hide select, show personal */
+    document.getElementById("screen-select").style.display = "none";
+    var p = document.getElementById("screen-personal");
+    p.style.display = "block";
+    p.style.opacity = "0";
+    window.scrollTo(0,0);
+
+    /* Animate in */
+    setTimeout(function(){
+      p.style.transition = "opacity 0.4s ease";
+      p.style.opacity = "1";
+
+      /* Animate empathy elements */
+      ["emp-label","emp-text","emp-sub"].forEach(function(id,i){
+        var el = document.getElementById(id);
+        el.style.transition = "opacity 0.5s ease, transform 0.5s cubic-bezier(0.16,1,0.3,1)";
+        el.style.transform = "translateY(16px)";
+        setTimeout(function(){
+          el.style.opacity = "1";
+          el.style.transform = "translateY(0)";
+        }, 100 + i*120);
+      });
+    }, 30);
+  };
+
+  /* ── FORM SUBMIT ── */
+  window.submitF = function(e) {
+    e.preventDefault();
+    var inp = document.getElementById("phone-input");
+    var err = document.getElementById("phone-error");
+    var digits = inp.value.replace(/\D/g,"");
+    var min = cur ? cur.l - 2 : 8;
+
+    if (digits.length < min) {
+      err.style.display = "block";
+      inp.style.borderColor = "#C62828";
+      var s=0, sh=setInterval(function(){
+        inp.style.transform = s%2===0?"translateX(5px)":"translateX(-5px)";
+        s++; if(s>5){clearInterval(sh);inp.style.transform="translateX(0)";}
+      },60);
+      return;
+    }
+
+    err.style.display = "none";
+    var btn = document.getElementById("submit-btn");
+    btn.textContent = "Отправляем...";
+    btn.style.opacity = "0.7";
+    btn.style.pointerEvents = "none";
+
+    setTimeout(function(){
+      var fc = document.getElementById("form-card");
+      var ty = document.getElementById("thankyou-card");
+      fc.style.transition = "opacity 0.3s ease, transform 0.3s ease";
+      fc.style.opacity = "0";
+      fc.style.transform = "translateY(-8px)";
+      setTimeout(function(){
+        fc.style.display = "none";
+        ty.style.display = "block";
+        ty.scrollIntoView({behavior:"smooth",block:"center"});
+      },300);
+    },700);
+  };
+
+  /* ── LIVE COUNTER ── */
+  var count = 34;
+  setInterval(function(){
+    count = Math.min(42, Math.max(28, count+(Math.random()<0.5?1:-1)));
+    document.querySelectorAll(".online-num").forEach(function(el){
+      el.textContent = count;
+    });
+    var hc = document.getElementById("hdr-count");
+    if (hc) hc.textContent = count;
+  }, 4800);
+
+  /* ── INIT ── */
+  renderC("");
+  fetch("https://ipapi.co/json/")
+    .then(function(r){return r.json();})
+    .then(function(d){selC(d.country_code||"RU",true);})
+    .catch(function(){selC("RU",true);});
+
+  /* ── FONTS READY → SHOW ── */
+  window.addEventListener("load", function(){
+    var show = function(){
+      window.scrollTo(0,0);
+      document.body.classList.add("ready");
+    };
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function(){ setTimeout(show,30); });
+    } else { setTimeout(show,100); }
+  });
+
+})();
+</script>
+</body>
+</html>
